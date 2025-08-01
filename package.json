@@ -11,11 +11,17 @@
   },
   "dependencies": {
     "@nuxt/eslint": "^1.7.1",
+    "@prisma/client": "^6.13.0",
+    "@prisma/extension-accelerate": "^2.0.2",
+    "@prisma/nuxt": "^0.3.0",
     "@tailwindcss/vite": "^4.1.11",
     "eslint": "^9.32.0",
     "nuxt": "^3.17.7",
     "tailwindcss": "^4.1.11",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "prisma": "^6.13.0"
   }
 }
