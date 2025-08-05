@@ -14,6 +14,15 @@
 
       <form @submit.prevent="submit">
         <div class="mt-10">
+          <label class="block text-sm text-zinc-300 mb-1">Full Name</label>
+          <input
+            v-model="name"
+            type="text"
+            placeholder="Full name"
+            class="block w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded placeholder:text-zinc-500"
+          />
+        </div>
+        <div class="mt-5">
           <label class="block text-sm text-zinc-300 mb-1">Email Address</label>
           <input
             v-model="email"
@@ -51,21 +60,23 @@
 </template>
 
 <script setup>
+const name = ref("");
 const email = ref("");
 const password = ref("");
 
 async function submit() {
-  console.log("Email: ", email.value);
-  console.log("Password: ", password.value);
+  // console.log("Email: ", email.value);
+  // console.log("Password: ", password.value);
 
-  // const response = await $fetch("/api/user", {
-  //   method: "POST",
-  //   body: {
-  //     email: email.value,
-  //     password: password.value,
-  //   },
-  // });
+  const response = await $fetch("/api/user", {
+    method: "POST",
+    body: {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+    },
+  });
 
-  // console.log(response);
+  console.log(response);
 }
 </script>
