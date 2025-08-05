@@ -1,15 +1,33 @@
-// import { withAccelerate } from "@prisma/extension-accelerate";
+import prisma from "~/lib/prisma";
+import bcrypt from "bcryptjs";
+// /api/user POST
+
+// Hashing passwords
+// - Prevents PW from being stored in plaintext
+// - mypassword123 jnjvsadcjncuwinuiwebjksab,/#@$fasDFVCASDR$@#
+
+// Salts
+// - salt = string of random characters
+// - Typically added to the beginning of a user's PW
+//    - mypassword123 becomes x#fSA#Amypassword123
+// - Used to prevent hackers from using precomputed hash tables to crack a PW
+// - Each user gets their own salt so even if two users have the same PW
+//   their password's look completely different
 
 export default defineEventHandler(async (event) => {
-  // const prisma = usePrismaClient().$extends(withAccelerate());
   const body = await readBody(event);
-  const prisma = usePrismaClient();
-  // await prisma.user.create({
-  //   data: {
-  //     email: body.email,
-  //     password: body.password,
-  //   },
-  // });
+
+  const salt = await bcrypt.genSalt(10);
+  const passwordHash = await bcrypt.hash(body.password, salt);
+
+  // Sends to database
+  await prisma.user.create({
+    data: {
+      email: body.email,
+      password: passwordHash,
+      salt: salt,
+    },
+  });
   console.log(body);
   return { data: "success" };
 });
