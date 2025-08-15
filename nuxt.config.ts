@@ -34,12 +34,4 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  // runtimeConfig: {
-  //   // Private (server only)
-  //   jwt_secret: process.env.JWT_SECRET,
-  //   // // Public (available client + server)
-  //   // public: {
-  //   //   apiUrl: process.env.MY_PUBLIC_API_URL,
-  //   // },
-  // },
 });
