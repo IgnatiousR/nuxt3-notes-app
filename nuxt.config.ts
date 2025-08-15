@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@nuxtjs/color-mode",
     "@nuxt/icon",
     "@prisma/nuxt",
+    "@formkit/auto-animate/nuxt",
   ],
   colorMode: {
     classSuffix: "",
@@ -29,5 +30,17 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
   vite: {
     plugins: [tailwindcss()],
+  },
+  runtimeConfig: {
+    // Private (server only)
+    jwt_secret: process.env.JWT_SECRET,
+    // public: {
+    //   jwt_secret: process.env.JWT_SECRET,
+    // },
+
+    // // Public (available client + server)
+    // public: {
+    //   apiUrl: process.env.MY_PUBLIC_API_URL,
+    // },
   },
 });
