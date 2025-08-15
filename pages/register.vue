@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "vue-sonner";
 import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
-import { Loader2 } from "lucide-vue-next";
+import { Loader2, Pencil, MoveRight } from "lucide-vue-next";
 
 const loading = ref(false);
 
@@ -43,6 +43,11 @@ const { handleSubmit } = useForm({
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true;
   console.log(values.username);
+  toast.success("After 3 sec");
+  setTimeout(() => {
+    loading.value = false;
+    navigateTo("/");
+  }, 3000);
 
   // toast("You submitted the following values:", {
   //   description: "" + values.username,
@@ -63,13 +68,19 @@ const onSubmit = handleSubmit(async (values) => {
 
     toast.success("Account registered successfully.");
   } catch (error) {
-    console.log("Err:", error.response?._data?.message);
-    toast.error(error.response?._data?.message);
+    // console.log("Err:", error.response?._data?.message);
+    // toast.error(error.response?._data?.message);
+    if (error && typeof error === "object" && "response" in error) {
+      const err = error as { response?: { _data?: { message?: string } } };
+      console.log("Err:", err.response?._data?.message);
+      toast.error(err.response?._data?.message || "Something went wrong");
+    } else {
+      console.error("Unexpected error", error);
+      toast.error("Something went wrong");
+    }
   } finally {
     loading.value = false;
   }
-
-  loading.value = false;
 });
 </script>
 
@@ -78,26 +89,30 @@ const onSubmit = handleSubmit(async (values) => {
     <div class="h-screen flex">
       <!-- sidebar -->
       <div class="bg-zinc-900 w-[518px] p-8 flex flex-col justify-center">
-        <h1 class="font-semibold text-xl text-white">
-          Notes<span class="text-yellow-500">App</span>
-        </h1>
+        <div class="flex items-center">
+          <Pencil class="w-6 h-6 mr-2 text-yellow-500" />
+          <h1 class="font-semibold text-xl text-white">
+            Notes<span class="text-yellow-500">App</span>
+          </h1>
+        </div>
+
         <h1 class="font-bold text-lg mt-8">Sign up for a free account</h1>
         <p class="text-sm">
           Already registered?
-          <span class="font-bold text-yellow-500 underline mt-0.5">Log in</span>
+          <NuxtLink
+            to="/login"
+            class="font-bold text-yellow-500 underline mt-0.5"
+            >Log in</NuxtLink
+          >
           to your account
         </p>
 
-        <form class="space-y-6 mt-10" @submit="onSubmit">
+        <form class="space-y-5 mt-10" @submit="onSubmit">
           <FormField v-slot="{ componentField }" name="username">
             <FormItem v-auto-animate>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input
-                  type="text"
-                  placeholder="shadcn"
-                  v-bind="componentField"
-                />
+                <Input type="text" placeholder="Name" v-bind="componentField" />
               </FormControl>
               <FormDescription>
                 This is your public display name.
@@ -111,11 +126,11 @@ const onSubmit = handleSubmit(async (values) => {
               <FormControl>
                 <Input
                   type="email"
-                  placeholder="shadcn@g.c"
+                  placeholder="you@example.com"
                   v-bind="componentField"
                 />
               </FormControl>
-              <FormDescription> </FormDescription>
+              <!-- <FormDescription> </FormDescription> -->
               <FormMessage />
             </FormItem>
           </FormField>
@@ -129,7 +144,7 @@ const onSubmit = handleSubmit(async (values) => {
                   v-bind="componentField"
                 />
               </FormControl>
-              <FormDescription> </FormDescription>
+              <!-- <FormDescription> </FormDescription> -->
               <FormMessage />
             </FormItem>
           </FormField>
@@ -143,7 +158,7 @@ const onSubmit = handleSubmit(async (values) => {
                   v-bind="componentField"
                 />
               </FormControl>
-              <FormDescription> </FormDescription>
+              <!-- <FormDescription> </FormDescription> -->
               <FormMessage />
             </FormItem>
           </FormField>
@@ -151,8 +166,8 @@ const onSubmit = handleSubmit(async (values) => {
           <Button
             :disabled="loading"
             class="mt-4 bg-yellow-500 rounded-full w-full px-4 py-2 text-black text-sm font-bold cursor-pointer hover:bg-yellow-600"
-            ><Loader2 v-if="loading" class="w-4 h-4 mr-2 animate-spin" />
-            Sign Up
+            ><Loader2 v-if="loading" class="w-4 h-4 mr-2 animate-spin" /> Sign
+            Up <MoveRight class="w-5 h-5 mr-2" />
           </Button>
           <!-- <Toaster
             close-button
