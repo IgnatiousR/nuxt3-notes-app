@@ -18,9 +18,11 @@ import { Input } from "@/components/ui/input";
 import { toast } from "vue-sonner";
 import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
-import { Loader2, Pencil, MoveRight } from "lucide-vue-next";
+import { Loader2, Pencil, MoveRight, Eye, EyeOff } from "lucide-vue-next";
 
 const loading = ref(false);
+const show_password = ref(false);
+const show_password_confirm = ref(false);
 
 const formSchema = toTypedSchema(
   z
@@ -138,11 +140,26 @@ const onSubmit = handleSubmit(async (values) => {
             <FormItem v-auto-animate>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="********"
-                  v-bind="componentField"
-                />
+                <div class="relative w-full items-center">
+                  <Input
+                    :type="show_password ? 'text' : 'password'"
+                    :placeholder="show_password ? 'Password' : '********'"
+                    v-bind="componentField"
+                  />
+                  <div
+                    class="absolute end-0 inset-y-0 flex items-center justify-center px-2 mr-1 cursor-pointer"
+                    @click="show_password = !show_password"
+                  >
+                    <EyeOff
+                      v-if="!show_password"
+                      class="size-5 text-muted-foreground"
+                    />
+                    <Eye
+                      v-if="show_password"
+                      class="size-5 text-muted-foreground"
+                    />
+                  </div>
+                </div>
               </FormControl>
               <!-- <FormDescription> </FormDescription> -->
               <FormMessage />
@@ -152,11 +169,30 @@ const onSubmit = handleSubmit(async (values) => {
             <FormItem v-auto-animate>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="********"
-                  v-bind="componentField"
-                />
+                <div class="relative w-full items-center">
+                  <Input
+                    :type="show_password_confirm ? 'text' : 'password'"
+                    :placeholder="
+                      show_password_confirm
+                        ? 'Confirm Password'
+                        : '****************'
+                    "
+                    v-bind="componentField"
+                  />
+                  <div
+                    class="absolute end-0 inset-y-0 flex items-center justify-center px-2 mr-1 cursor-pointer"
+                    @click="show_password_confirm = !show_password_confirm"
+                  >
+                    <EyeOff
+                      v-if="!show_password_confirm"
+                      class="size-5 text-muted-foreground"
+                    />
+                    <Eye
+                      v-if="show_password_confirm"
+                      class="size-5 text-muted-foreground"
+                    />
+                  </div>
+                </div>
               </FormControl>
               <!-- <FormDescription> </FormDescription> -->
               <FormMessage />
