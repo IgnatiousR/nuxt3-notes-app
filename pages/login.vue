@@ -18,9 +18,10 @@ import { Input } from "@/components/ui/input";
 import { toast } from "vue-sonner";
 import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
-import { Loader2, Pencil, MoveRight } from "lucide-vue-next";
+import { Loader2, Pencil, MoveRight, EyeOff, Eye } from "lucide-vue-next";
 
 const loading = ref(false);
+const show = ref(false);
 
 const formSchema = toTypedSchema(
   z.object({
@@ -114,11 +115,20 @@ const onSubmit = handleSubmit(async (values) => {
             <FormItem v-auto-animate>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="********"
-                  v-bind="componentField"
-                />
+                <div class="relative w-full items-center">
+                  <Input
+                    :type="show ? 'text' : 'password'"
+                    :placeholder="show ? 'Password' : '********'"
+                    v-bind="componentField"
+                  />
+                  <div
+                    class="absolute end-0 inset-y-0 flex items-center justify-center px-2 mr-1 cursor-pointer"
+                    @click="show = !show"
+                  >
+                    <EyeOff v-if="!show" class="size-5 text-muted-foreground" />
+                    <Eye v-if="show" class="size-5 text-muted-foreground" />
+                  </div>
+                </div>
               </FormControl>
               <!-- <FormDescription> </FormDescription> -->
               <FormMessage />
@@ -146,8 +156,6 @@ const onSubmit = handleSubmit(async (values) => {
           />
         </form>
       </div>
-
-      <div>Main</div>
     </div>
   </div>
 </template>
