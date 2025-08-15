@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware(async (_event) => {
     return navigateTo("/register");
   }
   try {
-    await $verifyJwtToken(jwt.value, config.jwt_secret);
+    await $verifyJwtToken(jwt.value, config.jwtSecret);
     // console.log("Success");
   } catch (error) {
     console.error(error);
