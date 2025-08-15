@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
         salt: salt,
       },
     });
-    const token = jwt.sign({ id: user.id }, config.jwt_secret);
+    const token = jwt.sign({ id: user.id }, config.jwtSecret);
     console.log("Token:", token);
 
     setCookie(event, "NotesJWT", token, {
