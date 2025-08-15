@@ -1,6 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
+  runtimeConfig: {
+    jwtSecret: process.env.JWT_SECRET,
+  },
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   modules: [
@@ -31,16 +34,12 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  runtimeConfig: {
-    // Private (server only)
-    jwt_secret: process.env.JWT_SECRET,
-    // public: {
-    //   jwt_secret: process.env.JWT_SECRET,
-    // },
-
-    // // Public (available client + server)
-    // public: {
-    //   apiUrl: process.env.MY_PUBLIC_API_URL,
-    // },
-  },
+  // runtimeConfig: {
+  //   // Private (server only)
+  //   jwt_secret: process.env.JWT_SECRET,
+  //   // // Public (available client + server)
+  //   // public: {
+  //   //   apiUrl: process.env.MY_PUBLIC_API_URL,
+  //   // },
+  // },
 });
