@@ -44,16 +44,6 @@ const { handleSubmit } = useForm({
 
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true;
-  console.log(values.username);
-  toast.success("After 3 sec");
-  setTimeout(() => {
-    loading.value = false;
-    navigateTo("/");
-  }, 3000);
-
-  // toast("You submitted the following values:", {
-  //   description: "" + values.username,
-  // });
 
   try {
     const response = await $fetch("/api/user", {
@@ -69,6 +59,10 @@ const onSubmit = handleSubmit(async (values) => {
     console.log("res:", response);
 
     toast.success("Account registered successfully.");
+    setTimeout(() => {
+      loading.value = false;
+      navigateTo("/");
+    }, 3000);
   } catch (error) {
     // console.log("Err:", error.response?._data?.message);
     // toast.error(error.response?._data?.message);
