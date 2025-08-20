@@ -2,6 +2,7 @@
 import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   runtimeConfig: {
+    databaseUrl: process.env.DATABASE_URL,
     jwtSecret: process.env.JWT_SECRET,
   },
   compatibilityDate: "2025-07-15",
@@ -10,13 +11,12 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@nuxt/image",
     "shadcn-nuxt",
-    "@nuxtjs/color-mode",
-    "@nuxt/icon",
-    "@prisma/nuxt",
     "@formkit/auto-animate/nuxt",
+    "@nuxtjs/color-mode",
   ],
-  colorMode: {
-    classSuffix: "",
+  css: ["~/assets/css/main.css"],
+  vite: {
+    plugins: [tailwindcss()],
   },
   shadcn: {
     /**
@@ -29,9 +29,7 @@ export default defineNuxtConfig({
      */
     componentDir: "./components/ui",
   },
-  // css: ["~/assets/css/tailwind.css"],
-  css: ["~/assets/css/main.css"],
-  vite: {
-    plugins: [tailwindcss()],
+  colorMode: {
+    classSuffix: "",
   },
 });
