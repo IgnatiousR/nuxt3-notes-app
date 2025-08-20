@@ -3,7 +3,6 @@ definePageMeta({
   middleware: ["auth"],
 });
 </script>
-
 <template>
   <div>Index</div>
 </template>
