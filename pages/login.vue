@@ -37,17 +37,17 @@ const { handleSubmit } = useForm({
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true;
   toast.success("After 3 sec");
-  setTimeout(() => {
-    loading.value = false;
-    navigateTo("/");
-  }, 3000);
+  // setTimeout(() => {
+  //   loading.value = false;
+  //   navigateTo("/");
+  // }, 3000);
 
   // toast("You submitted the following values:", {
   //   description: "" + values.username,
   // });
 
   try {
-    const response = await $fetch("/api/user", {
+    const response = await $fetch("/api/login", {
       method: "POST",
       body: {
         email: values.email,
@@ -103,7 +103,7 @@ const onSubmit = handleSubmit(async (values) => {
               <FormControl>
                 <Input
                   type="email"
-                  placeholder="shadcn@g.c"
+                  placeholder="you@example.com"
                   v-bind="componentField"
                 />
               </FormControl>
