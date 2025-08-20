@@ -16,9 +16,11 @@
 // Generate secret:
 // - node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
-import prisma from "~/lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+// import db from "~/src";
+import { db } from "~/src/db/db";
+import { usersTable } from "~/src/db/schema";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -28,17 +30,19 @@ export default defineEventHandler(async (event) => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(body.password, salt);
 
+    const user: typeof usersTable.$inferInsert = {
+      name: body.name,
+      email: body.email,
+      password: passwordHash,
+      salt: salt,
+    };
+
     // Sends to database
-    const user = await prisma.user.create({
-      data: {
-        name: body.name,
-        email: body.email,
-        password: passwordHash,
-        salt: salt,
-      },
-    });
-    const token = jwt.sign({ id: user.id }, config.jwtSecret);
+    // await db.insert(usersTable).values(user);
+    const [newUser] = await db.insert(usersTable).values(user).returning();
+    const token = jwt.sign({ id: newUser.id }, config.jwtSecret);
     console.log("Token:", token);
+    console.log("U:", newUser);
 
     setCookie(event, "NotesJWT", token, {
       maxAge: 60 * 60 * 12, // seconds
@@ -47,31 +51,30 @@ export default defineEventHandler(async (event) => {
     //console.log("Sec:", body);
     return { data: "success" };
   } catch (error) {
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "P2002"
-    ) {
-      throw createError({
-        statusCode: 409,
-        message: "An email with this address already exists.",
-      });
+    // console.log("Er:", error);
+    // console.log("Ercosw:", error["cause"]);
+    // console.log("Cause:", error.cause);
+    const cause = error?.cause;
+
+    if (typeof cause === "object" && cause) {
+      const detail = cause.message ?? cause.detail;
+
+      if (
+        typeof detail === "string" &&
+        detail.includes(
+          'duplicate key value violates unique constraint "users_email_unique"'
+        )
+      ) {
+        throw createError({
+          statusCode: 409,
+          message: "An account with this email already exists.",
+        });
+      }
     }
 
-    console.error("Unexpected error:", error);
     throw createError({
       statusCode: 500,
       message: "Internal server error",
     });
-
-    //console.log("er:", error);
-    // if (error.code === "P2002") {
-    //   throw createError({
-    //     statusCode: 409,
-    //     message: "An email with this address already exists.",
-    //   });
-    // }
-    //throw error;
   }
 });
