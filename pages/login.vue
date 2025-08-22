@@ -8,7 +8,6 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
-  // FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -36,15 +35,6 @@ const { handleSubmit } = useForm({
 
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true;
-  toast.success("After 3 sec");
-  // setTimeout(() => {
-  //   loading.value = false;
-  //   navigateTo("/");
-  // }, 3000);
-
-  // toast("You submitted the following values:", {
-  //   description: "" + values.username,
-  // });
 
   try {
     const response = await $fetch("/api/login", {
@@ -56,9 +46,15 @@ const onSubmit = handleSubmit(async (values) => {
     });
 
     console.log("res:", response);
-
-    toast.success("Account registered successfully.");
+    if (response.data == "success") {
+      toast.success("Account logged in successfully.");
+      setTimeout(() => {
+        loading.value = false;
+        navigateTo("/");
+      }, 3000);
+    }
   } catch (error) {
+    console.log("E:", error);
     if (error && typeof error === "object" && "response" in error) {
       const err = error as { response?: { _data?: { message?: string } } };
       console.log("Err:", err.response?._data?.message);
@@ -141,13 +137,6 @@ const onSubmit = handleSubmit(async (values) => {
             ><Loader2 v-if="loading" class="w-4 h-4 mr-2 animate-spin" /> Login
             <MoveRight class="w-5 h-5 mr-2" />
           </Button>
-          <!-- <Toaster
-            close-button
-            rich-colors
-            theme="dark"
-            position="top-center"
-            :expand="true"
-          /> -->
           <Toaster
             rich-colors
             theme="dark"
