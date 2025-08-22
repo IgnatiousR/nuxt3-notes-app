@@ -14,3 +14,15 @@ export async function getUserById(id: SelectUser["id"]): Promise<
 > {
   return db.select().from(usersTable).where(eq(usersTable.id, id));
 }
+
+export async function getUserByEmail(email: SelectUser["email"]): Promise<
+  Array<{
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+    salt: string;
+  }>
+> {
+  return db.select().from(usersTable).where(eq(usersTable.email, email));
+}
