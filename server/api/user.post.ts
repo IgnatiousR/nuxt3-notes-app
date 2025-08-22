@@ -18,7 +18,6 @@
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-// import db from "~/src";
 import { db } from "~/src/db/db";
 import { usersTable } from "~/src/db/schema";
 
