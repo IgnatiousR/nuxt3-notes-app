@@ -1,93 +1,47 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 // import db from "~/src";
-import { db } from "~/src/db/db";
-import type { SelectUser } from "~/src/db/schema";
-import { usersTable } from "~/src/db/schema";
-import { eq } from "drizzle-orm";
-
-// export async function getUserByEm(email: string) {
-//   const result = await db
-//     .select()
-//     .from(users)
-//     .where(eq(users.email, email))
-//     .limit(1);
-
-//   return result[0] ?? null;
-// }
-
-async function getUserByEmail(email: SelectUser["email"]): Promise<
-  Array<{
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-    salt: string;
-  }>
-> {
-  return db.select().from(usersTable).where(eq(usersTable.email, email));
-}
+import { getUserByEmail } from "~/src/queries/select";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   try {
     const body = await readBody(event);
-    console.log("Bod:", body);
+    console.log("Body:", body);
 
-    //const salt = await bcrypt.genSalt(10);
-    const user = getUserByEmail(body.email);
-    const result = await db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.email, body.email))
-      .limit(1);
+    const user = await getUserByEmail(body.email);
+    if (user.length === 0) {
+      throw createError({
+        statusCode: 400,
+        message: "Invalid Credentials",
+      });
+    }
     console.log("U:", user);
-    console.log("R:", result); //R[0].password
-    // const isValid = await bcrypt.compare(body.password, user.password)
-    // const passwordHash = await bcrypt.hash(body.password, salt);
 
-    // db.select().from(usersTable).where(eq(usersTable.email, body.email));
+    // const passwordHash = await bcrypt.hash(body.password, user[0].salt);
+    const isValid = await bcrypt.compare(body.password, user[0].password);
+    console.log("Validity:", isValid);
 
-    // const user: typeof usersTable.$inferInsert = {
-    //   name: body.name,
-    //   email: body.email,
-    //   password: passwordHash,
-    //   salt: salt,
-    // };
+    if (!isValid) {
+      throw createError({
+        statusCode: 400,
+        message: "Invalid Credentials",
+      });
+    }
 
-    // Sends to database
-    // await db.insert(usersTable).values(user);
-    // const [newUser] = await db.insert(usersTable).values(user).returning();
-    // const token = jwt.sign({ id: newUser.id }, config.jwtSecret);
-    // console.log("Token:", token);
-    // console.log("U:", newUser);
+    const token = jwt.sign({ id: user[0].id }, config.jwtSecret);
+    setCookie(event, "NotesJWT", token, {
+      maxAge: 60 * 60 * 12, // seconds
+    });
 
-    // setCookie(event, "NotesJWT", token, {
-    //   maxAge: 60 * 60 * 12, // seconds
-    // });
-
-    //console.log("Sec:", body);
     return { data: "success" };
   } catch (error) {
-    // console.log("Er:", error);
-    // console.log("Ercosw:", error["cause"]);
-    // console.log("Cause:", error.cause);
-    const cause = error?.cause;
-
-    if (typeof cause === "object" && cause) {
-      const detail = cause.message ?? cause.detail;
-
-      if (
-        typeof detail === "string" &&
-        detail.includes(
-          'duplicate key value violates unique constraint "users_email_unique"'
-        )
-      ) {
-        throw createError({
-          statusCode: 409,
-          message: "An account with this email already exists.",
-        });
-      }
+    console.log("Er from server:", error);
+    if (error?.message) {
+      throw createError({
+        statusCode: 409,
+        message: error?.message,
+      });
     }
 
     throw createError({
