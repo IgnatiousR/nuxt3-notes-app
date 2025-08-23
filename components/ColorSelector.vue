@@ -1,12 +1,8 @@
 <template>
   <ClientOnly v-if="!colorMode?.forced">
-    <Button @click="isDark = !isDark">
-      <!-- <Icon
-        :icon="isDark ? 'radix-icons:moon' : 'radix-icons:sun'"
-        class="h-32 w-32 dark:text-black text-white"
-      /> -->
-      <Moon v-if="isDark" color="black" :size="32" />
-      <Sun v-if="!isDark" color="white" :size="32" />
+    <Button variant="outline" @click="isDark = !isDark">
+      <Moon v-if="isDark" class="w-6 h-6" />
+      <Sun v-if="!isDark" class="w-6 h-6" />
     </Button>
   </ClientOnly>
 </template>
