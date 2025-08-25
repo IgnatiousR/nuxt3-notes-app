@@ -112,9 +112,9 @@ const show = ref(true);
           </div>
         </div>
 
-        <div class="mx-10 md:mx-50">
+        <div class="mx-10 md:mx-50 mt-10">
           <p class="mb-2">Nov 22nd 2024</p>
-          <p>
+          <p class="text-zinc-400">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
