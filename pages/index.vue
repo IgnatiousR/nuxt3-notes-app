@@ -6,6 +6,11 @@ definePageMeta({
   middleware: ["auth"],
 });
 
+onMounted(async () => {
+  const reponse = await $fetch("/api/notes");
+  console.log(reponse);
+});
+
 // function changeSize() {
 //   size.value = 0;
 // }
@@ -24,16 +29,11 @@ const show = ref(true);
         <div class="flex justify-between">
           <div v-if="show" class="flex items-center">
             <Pencil class="w-6 h-6 mr-2 text-yellow-500" />
-            <h1 class="font-semibold text-xl">
-              Notes<span class="text-yellow-500">App</span>
-            </h1>
+            <h1 class="font-semibold text-xl">Notes<span class="text-yellow-500">App</span></h1>
           </div>
 
           <Button variant="secondary" size="icon" @click="show = !show"
-            ><ChevronRight
-              :class="[show ? '-rotate-180' : '']"
-              class="w-4 h-4 transition-all duration-500"
-            />
+            ><ChevronRight :class="[show ? '-rotate-180' : '']" class="w-4 h-4 transition-all duration-500" />
             <!-- <ChevronLeft v-if="show" class="w-4 h-4" /> -->
           </Button>
         </div>
@@ -50,15 +50,11 @@ const show = ref(true);
                   <span class="text-zinc-50">The Midnight library</span>
                 </div>
               </div>
-              <div
-                class="p-3 rounded outline-white dark:outline-black outline-solid hover:outline-yellow-500"
-              >
+              <div class="p-3 rounded outline-white dark:outline-black outline-solid hover:outline-yellow-500">
                 <h3 class="text-sm font-bold">Finished reading</h3>
                 <div class="text-sm space-x-2">
                   <span class="text-zinc-800 dark:text-zinc-50">Today</span>
-                  <span class="text-zinc-800 dark:text-zinc-50"
-                    >The Midnight library</span
-                  >
+                  <span class="text-zinc-800 dark:text-zinc-50">The Midnight library</span>
                 </div>
               </div>
             </div>
@@ -96,11 +92,8 @@ const show = ref(true);
       </div>
       <div class="w-full">
         <div class="flex justify-between w-full p-4 items-start">
-          <Button
-            variant="ghost"
-            class="dark:text-zinc-400 text-zinc-700 hover:cursor-pointer"
-            ><SquarePen class="w-6 h-6 dark:text-zinc-300 text-zinc-800" />
-            Create Note</Button
+          <Button variant="ghost" class="dark:text-zinc-400 text-zinc-700 hover:cursor-pointer"
+            ><SquarePen class="w-6 h-6 dark:text-zinc-300 text-zinc-800" /> Create Note</Button
           >
           <div class="flex space-x-2">
             <button
@@ -115,15 +108,12 @@ const show = ref(true);
         <div class="mx-10 md:mx-50 mt-10">
           <p class="mb-2">Nov 22nd 2024</p>
           <p class="text-zinc-400">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum.
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+            industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+            scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
+            electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of
+            Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
+            Aldus PageMaker including versions of Lorem Ipsum.
           </p>
         </div>
       </div>
