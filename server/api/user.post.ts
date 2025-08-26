@@ -18,8 +18,8 @@
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { db } from "~/src/db/db";
-import { usersTable } from "~/src/db/schema";
+import type { usersTable } from "~/src/db/schema";
+import { createUser } from "~/src/queries/insert";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -36,9 +36,8 @@ export default defineEventHandler(async (event) => {
       salt: salt,
     };
 
-    // Sends to database
-    // await db.insert(usersTable).values(user);
-    const [newUser] = await db.insert(usersTable).values(user).returning();
+    // const [newUser] = await db.insert(usersTable).values(user).returning();
+    const newUser = await createUser(user);
     const token = jwt.sign({ id: newUser.id }, config.jwtSecret);
     console.log("Token:", token);
     console.log("U:", newUser);
@@ -60,9 +59,7 @@ export default defineEventHandler(async (event) => {
 
       if (
         typeof detail === "string" &&
-        detail.includes(
-          'duplicate key value violates unique constraint "users_email_unique"'
-        )
+        detail.includes('duplicate key value violates unique constraint "users_email_unique"')
       ) {
         throw createError({
           statusCode: 409,
