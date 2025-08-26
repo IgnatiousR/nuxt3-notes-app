@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="editor">
+    <div v-if="editor" class="space-x-2">
       <Button
         :disabled="!editor.can().chain().focus().toggleBold().run()"
         :class="{ 'is-active': editor.isActive('bold') }"
@@ -11,6 +11,7 @@
       <Button
         :disabled="!editor.can().chain().focus().toggleItalic().run()"
         :class="{ 'is-active': editor.isActive('italic') }"
+        class=" rounded-none"
         @click="editor.chain().focus().toggleItalic().run()"
       >
         italic
