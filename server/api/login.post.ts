@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-// import db from "~/src";
 import { getUserByEmail } from "~/src/queries/select";
 
 export default defineEventHandler(async (event) => {
