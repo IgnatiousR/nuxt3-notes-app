@@ -2,7 +2,6 @@
 import { vAutoAnimate } from "@formkit/auto-animate/vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
-// import { h } from "vue";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -126,14 +125,13 @@ const onSubmit = handleSubmit(async (values) => {
                   </div>
                 </div>
               </FormControl>
-              <!-- <FormDescription> </FormDescription> -->
               <FormMessage />
             </FormItem>
           </FormField>
-          <!-- <Button type="submit"> Submit </Button> -->
           <Button
             :disabled="loading"
-            class="items-center mt-4 bg-yellow-500 rounded-full w-full px-4 py-2 text-black text-sm font-bold cursor-pointer hover:bg-yellow-600"
+            :class="[loading ? 'cursor-not-allowed' : 'cursor-pointer']"
+            class="items-center mt-4 bg-yellow-500 rounded-full w-full px-4 py-2 text-black text-sm font-bold  hover:bg-yellow-600"
             ><Loader2 v-if="loading" class="w-4 h-4 mr-2 animate-spin" /> Login
             <MoveRight class="w-5 h-5 mr-2" />
           </Button>
