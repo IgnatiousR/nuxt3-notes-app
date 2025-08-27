@@ -21,8 +21,9 @@ const show = ref(true);
   </div>
 </template> -->
 <template>
-  <div>
+  <div class="mx-50">
     <TipTapEditor />
+    <div class="w-20 h-20 bg-red-500 text-center hover:bg-yellow-500 hover:scale-150 ease-in-out transition duration-200">a</div>
   </div>
 </template>
 
