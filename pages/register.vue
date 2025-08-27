@@ -20,6 +20,14 @@ import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
 import { Loader2, Pencil, MoveRight, Eye, EyeOff } from "lucide-vue-next";
 
+definePageMeta({
+  middleware: ["block-auth"],                  
+})
+
+useHead({
+    title: 'Register',
+})
+
 const loading = ref(false);
 const show_password = ref(false);
 const show_password_confirm = ref(false);
