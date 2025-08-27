@@ -8,20 +8,15 @@ definePageMeta({
 
 onMounted(async () => {
   const reponse = await $fetch("/api/notes");
+  // const { data, pending, error, refresh } = useFetch('/api/notes')
+  // console.log(data);
   console.log(reponse);
 });
-
-// function changeSize() {
-//   size.value = 0;
-// }
 const show = ref(true);
 </script>
 <template>
   <div>
     <div class="h-screen flex dark:bg-zinc-900 bg-zinc-100">
-      <!-- sidebar -->
-      <!-- <div :class="`bg-black w-[${size}px] p-8`"> -->
-
       <div
         :class="[show ? 'w-[400px] p-8' : 'w-20 p-4']"
         class="hidden md:block dark:bg-black bg-white overflow-hidden transition-all duration-200"
