@@ -12,6 +12,14 @@ import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
 import { Loader2, Pencil, MoveRight, EyeOff, Eye } from "lucide-vue-next";
 
+definePageMeta({
+  middleware: ["block-auth"],                  
+})
+
+useHead({
+    title: 'Login',
+})
+
 const loading = ref(false);
 const show = ref(false);
 
