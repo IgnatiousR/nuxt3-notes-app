@@ -1,20 +1,21 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from '@tailwindcss/vite';
 export default defineNuxtConfig({
   runtimeConfig: {
     databaseUrl: process.env.DATABASE_URL,
     jwtSecret: process.env.JWT_SECRET,
   },
-  compatibilityDate: "2025-07-15",
+  compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: [
-    "@nuxt/eslint",
-    "@nuxt/image",
-    "shadcn-nuxt",
-    "@formkit/auto-animate/nuxt",
-    "@nuxtjs/color-mode",
+    '@nuxt/eslint',
+    '@nuxt/image',
+    'shadcn-nuxt',
+    '@formkit/auto-animate/nuxt',
+    '@nuxtjs/color-mode',
+    'nuxt-tiptap-editor',
   ],
-  css: ["~/assets/css/main.css"],
+  css: ['~/assets/css/main.css'],
   vite: {
     plugins: [tailwindcss()],
   },
@@ -22,14 +23,17 @@ export default defineNuxtConfig({
     /**
      * Prefix for all the imported component
      */
-    prefix: "",
+    prefix: '',
     /**
      * Directory that the component lives in.
      * @default "./components/ui"
      */
-    componentDir: "./components/ui",
+    componentDir: './components/ui',
   },
   colorMode: {
-    classSuffix: "",
+    classSuffix: '',
+  },
+  tiptap: {
+    prefix: 'Tiptap', //prefix for Tiptap imports, composables not included
   },
 });

@@ -2,22 +2,23 @@
 import { vAutoAnimate } from "@formkit/auto-animate/vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
-// import { h } from "vue";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "vue-sonner";
 import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
 import { Loader2, Pencil, MoveRight, EyeOff, Eye } from "lucide-vue-next";
+
+definePageMeta({
+  middleware: ["block-auth"],                  
+})
+
+useHead({
+    title: 'Login',
+})
 
 const loading = ref(false);
 const show = ref(false);
@@ -76,19 +77,13 @@ const onSubmit = handleSubmit(async (values) => {
       <div class="bg-black w-[518px] p-8 flex flex-col justify-center">
         <div class="flex items-center">
           <Pencil class="w-6 h-6 mr-2 text-yellow-500" />
-          <h1 class="font-semibold text-xl text-white">
-            Notes<span class="text-yellow-500">App</span>
-          </h1>
+          <h1 class="font-semibold text-xl text-white">Notes<span class="text-yellow-500">App</span></h1>
         </div>
 
         <h1 class="font-bold text-lg mt-8">Log in to your account</h1>
         <p class="text-sm">
           Don't have an account?
-          <NuxtLink
-            to="/register"
-            class="font-bold text-yellow-500 underline mt-0.5"
-            >Sign up</NuxtLink
-          >
+          <NuxtLink to="/register" class="font-bold text-yellow-500 underline mt-0.5">Sign up</NuxtLink>
           for one
         </p>
 
@@ -97,11 +92,7 @@ const onSubmit = handleSubmit(async (values) => {
             <FormItem v-auto-animate>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input
-                  type="email"
-                  placeholder="you@example.com"
-                  v-bind="componentField"
-                />
+                <Input type="email" placeholder="you@example.com" v-bind="componentField" />
               </FormControl>
               <!-- <FormDescription> </FormDescription> -->
               <FormMessage />
@@ -126,23 +117,17 @@ const onSubmit = handleSubmit(async (values) => {
                   </div>
                 </div>
               </FormControl>
-              <!-- <FormDescription> </FormDescription> -->
               <FormMessage />
             </FormItem>
           </FormField>
-          <!-- <Button type="submit"> Submit </Button> -->
           <Button
             :disabled="loading"
-            class="items-center mt-4 bg-yellow-500 rounded-full w-full px-4 py-2 text-black text-sm font-bold cursor-pointer hover:bg-yellow-600"
+            :class="[loading ? 'cursor-not-allowed' : 'cursor-pointer']"
+            class="items-center mt-4 bg-yellow-500 rounded-full w-full px-4 py-2 text-sm font-bold hover:bg-yellow-600"
             ><Loader2 v-if="loading" class="w-4 h-4 mr-2 animate-spin" /> Login
             <MoveRight class="w-5 h-5 mr-2" />
           </Button>
-          <Toaster
-            rich-colors
-            theme="dark"
-            position="top-center"
-            :expand="true"
-          />
+          <Toaster rich-colors theme="dark" position="top-center" :expand="true" />
         </form>
       </div>
     </div>

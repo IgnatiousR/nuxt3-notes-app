@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { ref } from "vue";
 
 const show = ref(true);
@@ -12,8 +12,6 @@ const show = ref(true);
     >
       Toggle
     </button>
-
-    <!-- width animates here -->
     <div
       :class="[show ? 'w-[400px]' : 'w-0']"
       class="mt-4 bg-black text-white p-4 rounded-lg overflow-hidden transition-all duration-500"
@@ -21,4 +19,15 @@ const show = ref(true);
       Animated div 🚀
     </div>
   </div>
+</template> -->
+<template>
+  <div class="mx-50">
+    <TipTapEditor />
+    <div class="w-20 h-20 bg-red-500 text-center hover:bg-yellow-500 hover:scale-150 ease-in-out transition duration-200">a</div>
+  </div>
 </template>
+
+<script setup>
+import TipTapEditor from '~/components/TipTapEditor.vue';
+
+</script>
