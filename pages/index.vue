@@ -6,12 +6,21 @@ definePageMeta({
   middleware: ["auth"],
 });
 
+useHead({
+    title: 'Notes',
+})
+const notes = ref();
 onMounted(async () => {
   const reponse = await $fetch("/api/notes");
-  // const { data, pending, error, refresh } = useFetch('/api/notes')
-  // console.log(data);
   console.log(reponse);
+  notes.value = reponse;
+  console.log("N:", notes.value[0]);
 });
+
+// const { data, pending, error, refresh } = await useFetch('/api/notes')
+// console.log("UseFetch:",data.value);
+
+
 const show = ref(true);
 </script>
 <template>
@@ -36,7 +45,7 @@ const show = ref(true);
         <!-- today container -->
         <div v-auto-animate>
           <div v-if="show">
-            <p class="font-bold text-xs mt-12 mb-4">Today</p>
+            <p class="font-bold text-xs mt-12 mb-4">Today {{ show }}</p>
             <div class="ml-2 space-y-2">
               <div class="p-3 bg-yellow-600 rounded-lg">
                 <h3 class="text-sm font-bold text-white">Finished reading</h3>
