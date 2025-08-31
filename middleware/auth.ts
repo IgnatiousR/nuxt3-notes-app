@@ -7,17 +7,17 @@ export default defineNuxtRouteMiddleware(async (_event) => {
   console.log('Path:', _event.path);
 
   const jwt = useCookie('NotesJWT');
-  console.log('JWT:', jwt.value);
+  // console.log('JWT:', jwt.value);
 
   if (!jwt.value) {
-    return navigateTo('/register');
+    return navigateTo('/login');
   }
   try {
     const decoded = $verifyJwtToken(jwt.value, config.jwtSecret);
     console.log('D:', decoded);
   } catch (error) {
     console.error(error);
-    return navigateTo('/register');
+    return navigateTo('/login');
   }
 });
 
