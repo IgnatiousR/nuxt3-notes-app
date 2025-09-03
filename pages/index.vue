@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { vAutoAnimate } from "@formkit/auto-animate/vue";
 import { Pencil, SquarePen, Trash2, ChevronRight } from "lucide-vue-next";
 definePageMeta({
@@ -9,6 +10,12 @@ definePageMeta({
 useHead({
   title: "Notes",
 });
+
+const updateNoted = ref("");
+async function updateNote() {
+  console.log("Updated");
+}
+
 const notes = ref();
 const selectedNote = ref({ id: null, title: "", content: "", updatedAt: Date.now() });
 onMounted(async () => {
@@ -46,7 +53,7 @@ const show = ref(true);
         <!-- today container -->
         <div v-auto-animate>
           <div v-if="show">
-            <p class="font-bold text-xs mt-12 mb-4">Today {{ show }}</p>
+            <p class="font-bold text-xs mt-12 mb-4">Today</p>
             <div class="ml-2 space-y-2">
               <div
                 v-for="note in notes"
@@ -68,13 +75,13 @@ const show = ref(true);
                   <span class="text-zinc-50 line-clamp-2">{{ note.content }}</span>
                 </div>
               </div>
-              <div class="p-3 rounded outline-white dark:outline-black outline-solid hover:outline-yellow-500">
+              <!-- <div class="p-3 rounded outline-white dark:outline-black outline-solid hover:outline-yellow-500">
                 <h3 class="text-sm font-bold">Finished reading</h3>
                 <div class="text-sm space-x-2">
                   <span class="text-zinc-800 dark:text-zinc-50">Today</span>
                   <span class="text-zinc-800 dark:text-zinc-50">The Midnight library</span>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -97,9 +104,10 @@ const show = ref(true);
         <div class="mx-10 md:mx-50 mt-10">
           <h2 class="text-xl mb-2">{{ selectedNote.title }}</h2>
           <p class="mb-2">{{ new Date(selectedNote.updatedAt).toLocaleDateString() }}</p>
-          <p class="text-zinc-400">
-            {{ selectedNote.content }}
-          </p>
+          <div class="grid w-full gap-2">
+            <Textarea v-model="selectedNote.content" class="text-zinc-400" @input="updateNote" />
+            <!-- <Button>Send message</Button> -->
+          </div>
         </div>
       </div>
     </div>
