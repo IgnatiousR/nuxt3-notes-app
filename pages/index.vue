@@ -7,19 +7,20 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Notes',
-})
+  title: "Notes",
+});
 const notes = ref();
+const selectedNote = ref({ id: null, title: "", content: "", updatedAt: Date.now() });
 onMounted(async () => {
-  const reponse = await $fetch("/api/notes");
-  console.log(reponse);
-  notes.value = reponse;
-  console.log("N:", notes.value[0]);
+  // const reponse = await $fetch("/api/notes");
+  // console.log(reponse);
+  notes.value = await $fetch("/api/notes");
+  if (notes.value.length > 0) selectedNote.value = notes.value[0];
+  console.log("s:", selectedNote.value);
 });
 
 // const { data, pending, error, refresh } = await useFetch('/api/notes')
 // console.log("UseFetch:",data.value);
-
 
 const show = ref(true);
 </script>
@@ -47,11 +48,24 @@ const show = ref(true);
           <div v-if="show">
             <p class="font-bold text-xs mt-12 mb-4">Today {{ show }}</p>
             <div class="ml-2 space-y-2">
-              <div class="p-3 bg-yellow-600 rounded-lg">
-                <h3 class="text-sm font-bold text-white">Finished reading</h3>
+              <div
+                v-for="note in notes"
+                :key="note.id"
+                :class="{
+                  'bg-yellow-600': note.id == selectedNote.id,
+                  'hover:bg-yellow-600/50': note.id !== selectedNote.id,
+                }"
+                class="p-3 rounded-lg cursor-pointer"
+                @click="selectedNote = note"
+              >
+                <h3 class="text-sm font-bold text-white">{{ note.title }}</h3>
                 <div class="text-sm space-x-2">
-                  <span class="text-zinc-100">Today</span>
-                  <span class="text-zinc-50">The Midnight library</span>
+                  <span class="text-zinc-100">{{
+                    new Date(note.updatedAt).toLocaleDateString() === new Date().toLocaleDateString()
+                      ? "Today"
+                      : new Date(note.updatedAt).toLocaleDateString()
+                  }}</span>
+                  <span class="text-zinc-50 line-clamp-2">{{ note.content }}</span>
                 </div>
               </div>
               <div class="p-3 rounded outline-white dark:outline-black outline-solid hover:outline-yellow-500">
@@ -64,35 +78,6 @@ const show = ref(true);
             </div>
           </div>
         </div>
-
-        <!-- /today container -->
-
-        <!-- yesterday container -->
-        <!-- <div :class="{ hidden: !show }">
-          <p class="font-bold text-xs mt-12 mb-4">Today</p>
-          <div class="ml-2 space-y-2">
-            <div class="p-3 bg-yellow-500 rounded-lg">
-              <h3 class="text-sm font-bold">Finished reading</h3>
-              <div class="text-sm space-x-2">
-                <span class="text-zinc-100">Today</span>
-                <span class="text-zinc-50">The Midnight library</span>
-              </div>
-            </div>
-            <div
-              class="p-3 rounded outline-black outline-solid hover:outline-yellow-500"
-            >
-              <h3 class="text-sm font-bold">Finished reading</h3>
-              <div class="text-sm space-x-2">
-                <span class="text-zinc-100">Today</span>
-                <span class="text-zinc-50">The Midnight library</span>
-              </div>
-            </div>
-          </div>
-        </div> -->
-        <!-- /yesterday container -->
-
-        <!-- last 30 days container -->
-        <!-- /last 30 days container -->
       </div>
       <div class="w-full">
         <div class="flex justify-between w-full p-4 items-start">
@@ -110,14 +95,10 @@ const show = ref(true);
         </div>
 
         <div class="mx-10 md:mx-50 mt-10">
-          <p class="mb-2">Nov 22nd 2024</p>
+          <h2 class="text-xl mb-2">{{ selectedNote.title }}</h2>
+          <p class="mb-2">{{ new Date(selectedNote.updatedAt).toLocaleDateString() }}</p>
           <p class="text-zinc-400">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-            scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
-            electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of
-            Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
-            Aldus PageMaker including versions of Lorem Ipsum.
+            {{ selectedNote.content }}
           </p>
         </div>
       </div>
