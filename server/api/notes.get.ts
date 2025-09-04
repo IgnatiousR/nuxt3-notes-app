@@ -5,6 +5,13 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
     const jwtCookie = getCookie(event, 'NotesJWT');
     // console.log('Cookie:', jwtCookie);
+    if (!jwtCookie) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Not authorized to update',
+      });
+    }
+
     let decoded = null;
     if (typeof jwtCookie == 'string') {
       decoded = jwt.verify(jwtCookie, config.jwtSecret);
