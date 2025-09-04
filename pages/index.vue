@@ -16,11 +16,13 @@ async function updateNote() {
   console.log("Updated");
 }
 
+function deleteNote(){
+  console.log('Deleted')
+}
+
 const notes = ref();
 const selectedNote = ref({ id: null, title: "", content: "", updatedAt: Date.now() });
 onMounted(async () => {
-  // const reponse = await $fetch("/api/notes");
-  // console.log(reponse);
   notes.value = await $fetch("/api/notes");
   if (notes.value.length > 0) selectedNote.value = notes.value[0];
   console.log("s:", selectedNote.value);
@@ -97,6 +99,26 @@ const show = ref(true);
             >
               <Trash2 class="w-5 h-5" />
             </button>
+            <AlertDialog>
+              <AlertDialogTrigger as-child>
+                <button class="dark:text-zinc-400 text-zinc-600 hover:cursor-pointer hover:dark:text-white hover:text-black">
+                  <Trash2 class="w-5 h-5" />
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete your
+                    account and remove your data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction @click="deleteNote" >Continue</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
             <ColorSelector />
           </div>
         </div>
