@@ -40,3 +40,16 @@ export async function getNotesByUserId(userId: SelectNote['userId']): Promise<
   // return db.select().from(notesTable).where(eq(notesTable.userId, userId)).orderBy(notesTable.createdAt);
   return db.select().from(notesTable).where(eq(notesTable.userId, userId)).orderBy(desc(notesTable.createdAt));
 }
+
+export async function getNoteById(id: SelectNote['id']): Promise<{
+  id: number;
+  title: string;
+  content: string;
+  userId: number;
+  createdAt: Date;
+  updatedAt: Date;
+} | null> {
+  const [note] = await db.select().from(notesTable).where(eq(notesTable.id, id)).limit(1);
+  return Object.keys(note).length > 0 ? note : null;
+  // return note ?? null;
+}
