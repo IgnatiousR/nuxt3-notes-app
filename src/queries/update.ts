@@ -15,5 +15,4 @@ export async function updateNote(id: SelectNote['id'], data: Partial<Omit<Insert
     .where(eq(notesTable.id, id))
     .returning();
   return Object.keys(updatedNote).length > 0 ? updatedNote : null;
-  // return updatedNote ?? null;
 }
