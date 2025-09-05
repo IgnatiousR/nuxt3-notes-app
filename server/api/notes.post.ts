@@ -1,24 +1,24 @@
-import jwt from 'jsonwebtoken';
-import type { notesTable } from '~/src/db/schema';
-import { createNote } from '~/src/queries/insert';
+import jwt from "jsonwebtoken";
+import type { notesTable } from "~/src/db/schema";
+import { createNote } from "~/src/queries/insert";
 
 export default defineEventHandler(async (event) => {
   try {
     const config = useRuntimeConfig();
-    const jwtCookie = getCookie(event, 'NotesJWT');
+    const jwtCookie = getCookie(event, "NotesJWT");
 
     if (!jwtCookie) {
       throw createError({
         statusCode: 401,
-        statusMessage: 'Not authorized to update',
+        statusMessage: "Not authorized to create",
       });
     }
 
     const decodedToken = jwt.verify(jwtCookie, config.jwtSecret);
 
     const note: typeof notesTable.$inferInsert = {
-      title: '',
-      content: '',
+      title: "Untitled",
+      content: "",
       userId: decodedToken?.id,
     };
 
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
     console.error(err);
     throw createError({
       statusCode: 500,
-      statusMessage: 'Could not verify jwt',
+      statusMessage: "Could not verify jwt",
     });
   }
 });
