@@ -3,21 +3,21 @@ export default defineNuxtRouteMiddleware(async (_event) => {
 
   const { $verifyJwtToken } = useNuxtApp();
   const config = useRuntimeConfig();
-  console.log('middleware is fired!');
-  console.log('Path:', _event.path);
+  // console.log('middleware is fired!');
+  // console.log('Path:', _event.path);
 
-  const jwt = useCookie('NotesJWT');
+  const jwt = useCookie("NotesJWT");
   // console.log('JWT:', jwt.value);
 
   if (!jwt.value) {
-    return navigateTo('/login');
+    return navigateTo("/login");
   }
   try {
     const decoded = $verifyJwtToken(jwt.value, config.jwtSecret);
-    console.log('D:', decoded);
+    // console.log('D:', decoded);
   } catch (error) {
     console.error(error);
-    return navigateTo('/login');
+    return navigateTo("/login");
   }
 });
 
