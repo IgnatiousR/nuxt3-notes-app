@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     '@formkit/auto-animate/nuxt',
     '@nuxtjs/color-mode',
     'nuxt-tiptap-editor',
+    '@vueuse/nuxt',
   ],
   css: ['~/assets/css/main.css'],
   vite: {
