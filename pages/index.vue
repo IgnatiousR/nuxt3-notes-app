@@ -17,7 +17,21 @@ const updatedNote = ref({ id: null, title: "", content: "", updatedAt: Date.now(
 const notes = ref();
 const selectedNote = ref({ id: null, title: "", content: "", updatedAt: Date.now() });
 const show = ref(true);
+const editing = ref(false);
 const isLoading = ref(true);
+
+function enableEdit() {
+  editing.value = true;
+  // wait for next DOM update then focus input
+  requestAnimationFrame(() => {
+    const input = document.getElementById("inline-input");
+    input?.focus();
+  });
+}
+
+function disableEdit() {
+  editing.value = false;
+}
 
 const debounceFn = useDebounceFn(async () => {
   await updateNote();
@@ -110,6 +124,7 @@ onMounted(async () => {
         <div v-auto-animate class="flex-grow">
           <div v-if="show">
             <p class="font-bold text-xs mt-12 mb-4">Notes</p>
+
             <div class="ml-2 space-y-2">
               <div
                 v-for="note in notes"
@@ -184,13 +199,17 @@ onMounted(async () => {
         </div>
 
         <div class="mx-10 md:mx-50 mt-10">
-          <!-- <h2 class="text-xl mb-2">{{ selectedNote.title }}</h2> -->
+          <h2 v-if="!editing" class="text-xl mb-2 cursor-pointer" @click="enableEdit">{{ selectedNote.title }}</h2>
           <Input
+            v-else
+            id="inline-input"
             v-model="selectedNote.title"
             type="text"
             placeholder="Title"
             class="text-xl mb-2"
             @input="debounceFn"
+            @blur="disableEdit"
+            @keyup.enter="disableEdit"
           />
           <p class="mb-2">{{ new Date(selectedNote.updatedAt).toLocaleDateString() }}</p>
           <div class="grid w-full gap-2">
