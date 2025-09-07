@@ -22,6 +22,7 @@ useHead({
 
 const loading = ref(false);
 const show = ref(false);
+const isPending = ref(true);
 
 const formSchema = toTypedSchema(
   z.object({
@@ -68,11 +69,17 @@ const onSubmit = handleSubmit(async (values) => {
     loading.value = false;
   }
 });
+
+const { data: users, pending, error } = await useAsyncData("users", () =>
+  $fetch("/api/users")
+  
+)
+
 </script>
 
 <template>
   <div>
-    <div class="h-screen flex bg-zinc-100  dark:bg-zinc-900">
+    <div v-if="!pending" class="h-screen flex bg-zinc-100  dark:bg-zinc-900">
       <!-- sidebar -->
       <div class="bg-white dark:bg-black w-[518px] p-8 flex flex-col justify-center">
         <div class="flex items-center">
@@ -131,5 +138,14 @@ const onSubmit = handleSubmit(async (values) => {
         </form>
       </div>
     </div>
+
+    <section v-else className="pb-40 pt-10 bg-white">
+      <div className="w-full">
+        <div className="flex flex-col justify-center items-center h-screen">
+          <!-- <div className="spinner-border mb-3" role="status"></div> -->
+          <h1 className="text-center text-4xl">Loading...</h1>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
