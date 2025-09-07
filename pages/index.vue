@@ -183,8 +183,8 @@ onMounted(async () => {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction @click="deleteNote">Continue</AlertDialogAction>
+                  <AlertDialogCancel class="cursor-pointer">Cancel</AlertDialogCancel>
+                  <AlertDialogAction class="cursor-pointer bg-red-500 hover:bg-red-600" @click="deleteNote">Continue</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
@@ -213,7 +213,7 @@ onMounted(async () => {
           />
           <p class="mb-2">{{ new Date(selectedNote.updatedAt).toLocaleDateString() }}</p>
           <div class="grid w-full gap-2">
-            <Textarea ref="textarea" v-model="selectedNote.content" class="text-zinc-400" @input="debounceFn" />
+            <Textarea ref="textarea" v-model="selectedNote.content" class="text-zinc-600 dark:text-zinc-400" @input="debounceFn" />
             <!-- <Button>Send message</Button> -->
           </div>
         </div>

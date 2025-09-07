@@ -72,12 +72,12 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
   <div>
-    <div class="h-screen flex bg-zinc-900">
+    <div class="h-screen flex bg-zinc-100  dark:bg-zinc-900">
       <!-- sidebar -->
-      <div class="bg-black w-[518px] p-8 flex flex-col justify-center">
+      <div class="bg-white dark:bg-black w-[518px] p-8 flex flex-col justify-center">
         <div class="flex items-center">
           <Pencil class="w-6 h-6 mr-2 text-yellow-500" />
-          <h1 class="font-semibold text-xl text-white">Notes<span class="text-yellow-500">App</span></h1>
+          <h1 class="font-semibold text-xl dark:text-white">Notes<span class="text-yellow-500">App</span></h1>
         </div>
 
         <h1 class="font-bold text-lg mt-8">Log in to your account</h1>
