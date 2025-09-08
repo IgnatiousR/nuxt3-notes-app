@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "vue-sonner";
-import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
 import { Loader2, Pencil, MoveRight, Eye, EyeOff } from "lucide-vue-next";
 
@@ -70,7 +69,7 @@ const onSubmit = handleSubmit(async (values) => {
     setTimeout(() => {
       loading.value = false;
       navigateTo("/");
-    }, 3000);
+    }, 1500);
   } catch (error) {
     // console.log("Err:", error.response?._data?.message);
     // toast.error(error.response?._data?.message);
@@ -207,12 +206,6 @@ const onSubmit = handleSubmit(async (values) => {
             ><Loader2 v-if="loading" class="w-4 h-4 mr-2 animate-spin" /> Sign
             Up <MoveRight class="w-5 h-5 mr-2" />
           </Button>
-          <Toaster
-            rich-colors
-            theme="dark"
-            position="top-center"
-            :expand="true"
-          />
         </form>
       </div>
     </div>
