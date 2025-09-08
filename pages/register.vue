@@ -207,13 +207,6 @@ const onSubmit = handleSubmit(async (values) => {
             ><Loader2 v-if="loading" class="w-4 h-4 mr-2 animate-spin" /> Sign
             Up <MoveRight class="w-5 h-5 mr-2" />
           </Button>
-          <!-- <Toaster
-            close-button
-            rich-colors
-            theme="dark"
-            position="top-center"
-            :expand="true"
-          /> -->
           <Toaster
             rich-colors
             theme="dark"
@@ -222,8 +215,6 @@ const onSubmit = handleSubmit(async (values) => {
           />
         </form>
       </div>
-
-      <div></div>
     </div>
   </div>
 </template>
