@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/sheet";
 import { Skeleton } from '@/components/ui/skeleton'
 import { ref, onMounted, onBeforeUnmount } from "vue";
+import { toast } from "vue-sonner";
+
 definePageMeta({
   middleware: ["auth"],
 });
@@ -18,10 +20,27 @@ useHead({
   title: "Notes",
 });
 
-const textarea = ref(null);
-const updatedNote = ref({ id: null, title: "", content: "", updatedAt: Date.now() });
+interface Note {
+  id: number | null
+  title: string
+  content: string
+  updatedAt: number
+}
+
+const textarea = ref<InstanceType<typeof Textarea> | null>(null)
+const updatedNote = ref<Note>({
+  id: null,
+  title: "",
+  content: "",
+  updatedAt: Date.now(),
+});
 const notes = ref();
-const selectedNote = ref({ id: null, title: "", content: "", updatedAt: Date.now() });
+const selectedNote = ref<Note>({
+  id: null,
+  title: "",
+  content: "",
+  updatedAt: Date.now(),
+});
 const show = ref(true);
 const editing = ref(false);
 const isLoading = ref(true);
@@ -65,9 +84,10 @@ async function deleteNote() {
     method: "DELETE",
   });
 
-  const index = notes.value.findIndex((note) => {
+  const index = notes.value.findIndex((note: Note) => {
     return note.id === selectedNote.value.id;
   });
+
   console.log(index);
   notes.value.splice(index, 1);
   selectedNote.value = notes.value[0];
@@ -91,7 +111,10 @@ async function createNewNote() {
 function logout() {
   const jwtCookie = useCookie("NotesJWT");
   jwtCookie.value = null;
-  navigateTo("/login");
+  toast.success("Logged out successfully!", { duration: 1500 });
+  setTimeout(() => {
+    navigateTo("/login");
+  }, 1500);
 }
 
 function handleResize() {
