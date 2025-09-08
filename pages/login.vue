@@ -72,7 +72,6 @@ const onSubmit = handleSubmit(async (values) => {
 
 const { data: users, pending, error } = await useAsyncData("users", () =>
   $fetch("/api/users")
-  
 )
 
 </script>
