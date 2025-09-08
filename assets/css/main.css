@@ -2,6 +2,13 @@
 @import "tailwindcss";
 @plugin 'tailwind-scrollbar';
 @import "tw-animate-css";
+@tailwind utilities;
+
+@layer utilities {
+  .scrollbar {
+    @apply scrollbar-thin dark:scrollbar-thumb-zinc-800 dark:scrollbar-track-zinc-900;
+  }
+}
 
 @custom-variant dark (&:is(.dark *));
 

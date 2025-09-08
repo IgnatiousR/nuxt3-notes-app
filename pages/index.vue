@@ -152,7 +152,7 @@ onBeforeUnmount(() => {
   <div>
     <div class="h-screen flex dark:bg-zinc-900 bg-zinc-100">
       <div
-        class="hidden md:block w-[400px] p-8 dark:bg-black bg-white overflow-auto scrollbar-thin dark:scrollbar-thumb-zinc-800 dark:scrollbar-track-zinc-900 transition-all duration-200 flex flex-col"
+        class="hidden md:block w-[400px] p-8 dark:bg-black bg-white overflow-auto transition-all duration-200 flex flex-col"
       >
         <div class="flex justify-between">
           <div v-if="show" class="flex items-center">
