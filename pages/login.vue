@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "vue-sonner";
-import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
 import { Loader2, Pencil, MoveRight, EyeOff, Eye } from "lucide-vue-next";
 
@@ -22,7 +21,6 @@ useHead({
 
 const loading = ref(false);
 const show = ref(false);
-const isPending = ref(true);
 
 const formSchema = toTypedSchema(
   z.object({
@@ -49,11 +47,11 @@ const onSubmit = handleSubmit(async (values) => {
 
     console.log("res:", response);
     if (response.data == "success") {
-      toast.success("Account logged in successfully.");
+      toast.success("Account logged in successfully.", { duration: 1500 });
       setTimeout(() => {
         loading.value = false;
         navigateTo("/");
-      }, 3000);
+      }, 1500);
     }
   } catch (error) {
     console.log("E:", error);
@@ -70,23 +68,11 @@ const onSubmit = handleSubmit(async (values) => {
   }
 });
 
-const { data: users, pending, error } = await useAsyncData("users", () =>
-  $fetch("/api/users")
-)
-
 </script>
 
 <template>
   <div>
-    <section v-if="pending" className="pb-40 pt-10 bg-white">
-      <div className="w-full">
-        <div className="flex flex-col justify-center items-center h-screen">
-          <!-- <div className="spinner-border mb-3" role="status"></div> -->
-          <h1 className="text-center text-4xl">Loading...</h1>
-        </div>
-      </div>
-    </section>
-    <div v-else class="h-screen flex bg-zinc-100  dark:bg-zinc-900">
+    <div class="h-screen flex bg-zinc-100  dark:bg-zinc-900">
       <!-- sidebar -->
       <div class="bg-white dark:bg-black w-[518px] p-8 flex flex-col justify-center">
         <div class="flex items-center">
@@ -141,7 +127,7 @@ const { data: users, pending, error } = await useAsyncData("users", () =>
             ><Loader2 v-if="loading" class="w-4 h-4 mr-2 animate-spin" /> Login
             <MoveRight class="w-5 h-5 mr-2" />
           </Button>
-          <Toaster rich-colors theme="dark" position="top-center" :expand="true" />
+          
         </form>
       </div>
     </div>
