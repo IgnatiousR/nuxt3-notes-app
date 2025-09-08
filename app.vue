@@ -5,6 +5,6 @@ import { Toaster } from "@/components/ui/sonner";
  
 <template>
   <Analytics />
-  <Toaster rich-colors theme="dark" position="top-center" :expand="true" />
+  <Toaster rich-colors position="top-center" :expand="true" />
   <NuxtPage />
 </template>
