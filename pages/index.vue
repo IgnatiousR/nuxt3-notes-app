@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { vAutoAnimate } from "@formkit/auto-animate/vue";
-import { Pencil, SquarePen, Trash2, ChevronRight, LogOut } from "lucide-vue-next";
-import { ref, onMounted } from "vue";
+import { Input } from "@/components/ui/input"
+import { Pencil, SquarePen, Trash2, LogOut, MenuIcon } from "lucide-vue-next";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Skeleton } from '@/components/ui/skeleton'
+import { ref, onMounted, onBeforeUnmount } from "vue";
 definePageMeta({
   middleware: ["auth"],
 });
@@ -19,10 +25,10 @@ const selectedNote = ref({ id: null, title: "", content: "", updatedAt: Date.now
 const show = ref(true);
 const editing = ref(false);
 const isLoading = ref(true);
+const sheetOpen = ref(false)
 
 function enableEdit() {
   editing.value = true;
-  // wait for next DOM update then focus input
   requestAnimationFrame(() => {
     const input = document.getElementById("inline-input");
     input?.focus();
@@ -88,8 +94,18 @@ function logout() {
   navigateTo("/login");
 }
 
+function handleResize() {
+  if (window.innerWidth >= 768) {
+    sheetOpen.value = false // 👈 auto-close when going to desktop
+  }
+}
+
+
 onMounted(async () => {
-  notes.value = await $fetch("/api/notes");
+  isLoading.value = true;
+  window.addEventListener("resize", handleResize);
+  try{
+    notes.value = await $fetch("/api/notes");
   if (notes.value.length > 0) selectedNote.value = notes.value[0];
   else {
     await createNewNote();
@@ -97,27 +113,29 @@ onMounted(async () => {
   }
   updatedNote.value = selectedNote.value;
   textarea.value?.$el?.focus();
+  }
+  catch(err){console.error(err);}
+  finally {
+    isLoading.value = false;
+  }
+  
 });
 
-// const { data, pending, error, refresh } = await useFetch('/api/notes')
-// console.log("UseFetch:",data.value);
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", handleResize)
+})
 </script>
 <template>
   <div>
     <div class="h-screen flex dark:bg-zinc-900 bg-zinc-100">
       <div
-        :class="[show ? 'w-[400px] p-8' : 'w-20 p-4']"
-        class="dark:bg-black bg-white overflow-auto scrollbar-thin dark:scrollbar-thumb-zinc-800 dark:scrollbar-track-zinc-900 transition-all duration-200 flex flex-col"
+        class="hidden md:block w-[400px] p-8 dark:bg-black bg-white overflow-auto scrollbar-thin dark:scrollbar-thumb-zinc-800 dark:scrollbar-track-zinc-900 transition-all duration-200 flex flex-col"
       >
         <div class="flex justify-between">
           <div v-if="show" class="flex items-center">
             <Pencil class="w-6 h-6 mr-2 text-yellow-500" />
             <h1 class="font-semibold text-xl">Notes<span class="text-yellow-500">App</span></h1>
           </div>
-
-          <!-- <Button variant="secondary" size="icon" @click="show = !show"
-            ><ChevronRight :class="[show ? '-rotate-180' : '']" class="w-4 h-4 transition-all duration-500" />
-          </Button> -->
         </div>
 
         <!-- today container -->
@@ -125,8 +143,16 @@ onMounted(async () => {
           <div v-if="show">
             <p class="font-bold text-xs mt-12 mb-4">Notes</p>
 
+            <div v-if="isLoading" class="ml-2 space-y-2">
+              <Skeleton class="h-[125px] w-[240px] rounded-lg border-1" />
+              <Skeleton class="h-[125px] w-[240px] rounded-lg border" />
+              <Skeleton class="h-[125px] w-[240px] rounded-lg border" />
+              <Skeleton class="h-[125px] w-[240px] rounded-lg border" />
+              <Skeleton class="h-[125px] w-[240px] rounded-lg border" />
+            </div>
+
             <div class="ml-2 space-y-2">
-              <div
+               <div
                 v-for="note in notes"
                 :key="note.id"
                 :class="{
@@ -137,7 +163,7 @@ onMounted(async () => {
                 @click="
                   () => {
                     selectedNote = note;
-                    textarea.$el?.focus();
+                    textarea?.$el?.focus();
                   }
                 "
               >
@@ -147,30 +173,79 @@ onMounted(async () => {
                   <span class="dark:text-zinc-50 line-clamp-2">{{ note.content }}</span>
                 </div>
               </div>
-              <!-- <div class="p-3 rounded outline-white dark:outline-black outline-solid hover:outline-yellow-500">
-                <h3 class="text-sm font-bold">Finished reading</h3>
-                <div class="text-sm space-x-2">
-                  <span class="text-zinc-800 dark:text-zinc-50">Today</span>
-                  <span class="text-zinc-800 dark:text-zinc-50">The Midnight library</span>
-                </div>
-              </div> -->
             </div>
           </div>
         </div>
       </div>
       <div class="w-full">
         <div class="flex justify-between w-full p-4 items-start">
-          <Button
-            variant="ghost"
-            class="dark:text-zinc-400 text-zinc-700 hover:cursor-pointer hover:dark:text-white"
+          <Sheet v-model:open="sheetOpen">
+            <SheetTrigger as-child>
+              <button 
+                :disabled="isLoading" 
+                class="block md:hidden"
+                :class="{ 'cursor-not-allowed': isLoading, 'cursor-pointer': !isLoading }"
+              >
+                <MenuIcon
+                  class="w-5 h-5 dark:text-zinc-300 text-zinc-800 hover:dark:text-white"
+                  :class="{ 'opacity-50': isLoading }"
+                />
+              </button>
+            </SheetTrigger>
+
+            <SheetContent side="left" class="block md:hidden w-[300px] p-6">
+              <div class="flex justify-between">
+                <div v-if="show" class="flex items-center">
+                  <Pencil class="w-6 h-6 mr-2 text-yellow-500" />
+                  <h1 class="font-semibold text-xl">Notes<span class="text-yellow-500">App</span></h1>
+                </div>
+              </div>
+
+              <div v-auto-animate class="flex-grow">
+                <div v-if="show">
+                  <p class="font-bold text-xs mt-12 mb-4">Notes</p>
+                  <div class="ml-2 space-y-2">
+                    <div
+                      v-for="note in notes"
+                      :key="note.id"
+                      :class="{
+                        'bg-yellow-600': note.id == selectedNote.id,
+                        'hover:bg-yellow-600/50': note.id !== selectedNote.id,
+                      }"
+                      class="p-3 rounded-lg cursor-pointer border"
+                      @click="
+                        () => {
+                          selectedNote = note
+                          textarea?.$el?.focus()
+                          sheetOpen = false 
+                        }
+                      "
+                    >
+                      <h3 class="text-sm font-bold dark:text-white">{{ note.title }}</h3>
+                      <div class="text-sm space-x-2">
+                        <span class="dark:text-zinc-100">{{ new Date(note.updatedAt).toLocaleDateString() }}</span>
+                        <span class="dark:text-zinc-50 line-clamp-2">{{ note.content }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+          <button
+            :disabled="isLoading" 
+            :class="{ 'cursor-not-allowed': isLoading, 'cursor-pointer': !isLoading }"
+            class="flex gap-2 items-center dark:text-zinc-400 text-zinc-700 hover:dark:text-white"
             @click="createNewNote"
-            ><SquarePen class="w-6 h-6 dark:text-zinc-300 text-zinc-800" /> Create Note</Button
+            ><SquarePen class="w-5 h-5 dark:text-zinc-300 text-zinc-800" /> Create Note</button
           >
           <div class="flex space-x-4">
             <AlertDialog>
               <AlertDialogTrigger as-child>
                 <button
-                  class="dark:text-zinc-400 text-zinc-600 hover:cursor-pointer hover:dark:text-white hover:text-black"
+                  :disabled="isLoading" 
+                  :class="{ 'cursor-not-allowed': isLoading, 'cursor-pointer': !isLoading }"
+                  class="dark:text-zinc-400 text-zinc-600 hover:dark:text-white hover:text-black"
                 >
                   <Trash2 class="w-5 h-5" />
                 </button>
@@ -198,7 +273,12 @@ onMounted(async () => {
           </div>
         </div>
 
-        <div class="mx-10 md:mx-50 mt-10">
+        <div v-if="isLoading" class="mx-10 md:mx-50 mt-10 space-y-2">
+          <Skeleton class="h-[28px] w-full rounded-lg" />
+          <Skeleton class="h-[25px] w-full rounded-lg" />
+          <Skeleton class="h-[125px] w-full rounded-lg" />
+        </div>
+        <div v-else class="mx-10 md:mx-50 mt-10">
           <h2 v-if="!editing" class="text-xl mb-2 cursor-pointer" @click="enableEdit">{{ selectedNote.title }}</h2>
           <Input
             v-else
